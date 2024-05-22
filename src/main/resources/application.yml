@@ -1,1 +1,4 @@
-spring.application.name=git statuspaypal-integration
+paypal:
+  client-id: CLIENT_ID
+  client-secret: CLIENT_SECRET
+  mode: sandbox # 'sandox' for testing, 'live' for production
