@@ -1,4 +1,7 @@
+spring:
+  config:
+    import: secrets.yml
+
 paypal:
-  client-id: CLIENT_ID
-  client-secret: CLIENT_SECRET
+  client-id: AcLcJOYmOKc-QrC-up3MkMjphgmBpI5x-_N4Og7AzAdmK86vJrKlSMV2g1DZmPzqs67J3hDrU20ALwE6
   mode: sandbox # 'sandox' for testing, 'live' for production
