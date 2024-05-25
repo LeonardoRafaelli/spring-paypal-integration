@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.Optional;
@@ -30,7 +31,7 @@ public class PaypalController {
         try {
             String cancelUrl = "https://localhost:8080/payment/cancel";
             String successUrl = "https://localhost:8080/payment/success";
-"
+
             Payment payment = paypalService.createPayment(
                     10.0,
                     "USD",
@@ -59,6 +60,27 @@ public class PaypalController {
                 .filter(link -> link.getRel().equals("approval_url"))
                 .map(Links::getHref)
                 .findFirst();
+    }
+
+    @GetMapping("/payment/success")
+    public String paymentSuccess(
+            @RequestParam("paymentId") String paymentId,
+            @RequestParam("payerId") String payerId
+    ) {
+        try {
+
+            boolean paymentApproved = paypalService
+                    .executePayment(paymentId, payerId)
+                    .getState().equals("approved");
+
+            if(paymentApproved) {
+                return "paymentSuccess";
+            };
+
+        } catch (PayPalRESTException e) {
+            log.error("Error ocurred:", e);
+        }
+        return "paymentSuccess";
     }
 
 }
