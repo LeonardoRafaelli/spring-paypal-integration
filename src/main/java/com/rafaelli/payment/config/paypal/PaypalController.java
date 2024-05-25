@@ -29,8 +29,8 @@ public class PaypalController {
     @PostMapping("/payment/create")
     public RedirectView createPayment(){
         try {
-            String cancelUrl = "https://localhost:8080/payment/cancel";
-            String successUrl = "https://localhost:8080/payment/success";
+            String cancelUrl = "http://localhost:8080/payment/cancel";
+            String successUrl = "http://localhost:8080/payment/success";
 
             Payment payment = paypalService.createPayment(
                     10.0,
@@ -65,10 +65,11 @@ public class PaypalController {
     @GetMapping("/payment/success")
     public String paymentSuccess(
             @RequestParam("paymentId") String paymentId,
-            @RequestParam("payerId") String payerId
+            @RequestParam("PayerID") String payerId,
+            @RequestParam("token") String token
     ) {
         try {
-
+            System.out.println("Got here");
             boolean paymentApproved = paypalService
                     .executePayment(paymentId, payerId)
                     .getState().equals("approved");
@@ -81,6 +82,15 @@ public class PaypalController {
             log.error("Error ocurred:", e);
         }
         return "paymentSuccess";
+    }
+
+    @GetMapping("/payment/cancel")
+    public String paymentCancel() {
+        return "paymentCancel";
+    }
+    @GetMapping("/payment/error")
+    public String paymentError() {
+        return "paymentError";
     }
 
 }
